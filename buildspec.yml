@@ -1,0 +1,22 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  pre_build:
+    commands:
+      - echo "installing dependencies.."
+      - mvn clean install
+  build:
+    commands:
+      - echo "building the java project.."
+      - mvn package
+  post_build:
+    commands:
+      - echo "build complete"
+      - ls -a target/
+      - echo "uploading jar file to s3 bucket"
+      - aws s3 cp target/*.jar s3://my-s3-bucket-codebuild/
+artifects:
+  files:
+    - target/*.jar
